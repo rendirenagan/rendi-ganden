@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>认地人共享菜园</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green-deep: #2d5016;
+  --green-main: #4a7c23;
+  --green-light: #7cb342;
+  --green-pale: #e8f5e9;
+  --warm-white: #faf9f6;
+  --text-primary: #2e2e2e;
+  --text-secondary: #666;
+  --text-light: #999;
+  --red-price: #d32f2f;
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+  --radius: 16px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Noto Sans SC', sans-serif;
+  background: var(--warm-white);
+  color: var(--text-primary);
+  max-width: 430px;
+  margin: 0 auto;
+  min-height: 100vh;
+  overflow-x: hidden;
+  padding-bottom: 80px;
+}
+
+/* ===== TAB BAR ===== */
+.tab-bar {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 430px;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(20px);
+  display: flex;
+  justify-content: space-around;
+  padding: 8px 0;
+  border-top: 1px solid rgba(0,0,0,0.06);
+  z-index: 100;
+}
+.tab-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 4px 20px;
+  background: none;
+  border: none;
+  font-family: inherit;
+  cursor: pointer;
+}
+.tab-item .tab-icon { font-size: 22px; }
+.tab-item .tab-label { font-size: 10px; color: var(--text-light); font-weight: 500; }
+.tab-item.active .tab-label { color: var(--green-main); font-weight: 700; }
+
+/* ===== PAGE SYSTEM ===== */
+.page { display: none; animation: fadeIn 0.4s ease; padding: 20px 16px; }
+.page.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ===== HOME PAGE ===== */
+.hero {
+  background: linear-gradient(160deg, #2d5016 0%, #4a7c23 60%, #7cb342 100%);
+  border-radius: var(--radius);
+  padding: 40px 28px;
+  color: white;
+  text-align: center;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+}
+.hero h1 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 32px;
+  font-weight: 900;
+  margin-bottom: 12px;
+  letter-spacing: 2px;
+}
+.hero p {
+  font-size: 14px;
+  line-height: 1.8;
+  opacity: 0.9;
+  max-width: 280px;
+  margin: 0 auto;
+}
+.hero-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.15);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  margin-bottom: 16px;
+}
+
+.section-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--green-deep);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.benefit-list {
+  background: white;
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow-sm);
+}
+.benefit-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+.benefit-item::before {
+  content: '✓';
+  color: var(--green-main);
+  font-weight: 900;
+  flex-shrink: 0;
+}
+
+/* ===== SERVICES PAGE ===== */
+.services-section { margin-bottom: 24px; }
+.service-card {
+  background: white;
+  border-radius: var(--radius);
+  padding: 18px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-sm);
+}
+.service-card h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--green-deep);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.service-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.7; }
+.price-tag {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 24px;
+  font-weight: 900;
+  color: var(--red-price);
+  margin-top: 8px;
+}
+.price-note { font-size: 12px; color: var(--text-light); margin-top: 4px; }
+
+.product-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  margin-top: 10px;
+}
+.product-table th, .product-table td {
+  border: 1px solid #eee;
+  padding: 8px 6px;
+  text-align: center;
+}
+.product-table th {
+  background: var(--green-pale);
+  color: var(--green-deep);
+  font-weight: 700;
+}
+.product-table td:first-child { text-align: left; }
+
+.pickup-list { margin-top: 10px; }
+.pickup-item {
+  background: var(--green-pale);
+  padding: 14px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 10px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.pickup-item strong { color: var(--green-deep); }
+
+/* ===== PROFILE PAGE ===== */
+.profile-header {
+  background: linear-gradient(160deg, var(--green-deep), var(--green-main));
+  padding: 40px 24px;
+  text-align: center;
+  color: white;
+  border-radius: var(--radius);
+  margin-bottom: 20px;
+}
+.profile-header h2 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+.profile-header p { font-size: 13px; opacity: 0.9; }
+.profile-tag {
+  display: inline-block;
+  background: linear-gradient(135deg, #f9a825, #fbc02d);
+  color: white;
+  padding: 4px 14px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  margin-top: 10px;
+}
+
+.menu-group { margin-bottom: 16px; }
+.menu-group-title { font-size: 12px; color: var(--text-light); margin-bottom: 8px; padding-left: 4px; }
+.menu-item {
+  display: flex;
+  align-items: center;
+  background: white;
+  padding: 16px 18px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 2px;
+  cursor: pointer;
+}
+.menu-item:active { background: #f5f5f5; }
+.menu-icon { font-size: 20px; margin-right: 14px; }
+.menu-text { flex: 1; font-size: 14px; font-weight: 500; }
+.menu-arrow { color: var(--text-light); font-size: 14px; }
+</style>
+</head>
+<body>
+
+<!-- ===== HOME PAGE ===== -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-badge">🌿 认地人共享菜园</div>
+    <h1>认地人</h1>
+    <p>让有机走进每个社区</p>
+  </div>
+
+  <div class="section-title">🌱 品牌介绍</div>
+  <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.8; margin-bottom: 20px;">
+    认地人致力于打造社区共享有机菜园，通过“认领一米菜园 + 会员共享”模式，让每个家庭都能享受有机生活。我们坚持有机种植，连接农场与社区，共建邻里共享的新生活方式。
+  </div>
+
+  <div class="section-title">🎁 会员福利</div>
+  <div class="benefit-list">
+    <div class="benefit-item">认领专属一米菜园，享受全年有机蔬菜供应</div>
+    <div class="benefit-item">有机产品会员专享价，如面粉不超过10元/斤</div>
+    <div class="benefit-item">参与农事体验活动（豆腐、面条、采摘等）</div>
+    <div class="benefit-item">社区无人货架自提，邻里共享新鲜</div>
+  </div>
+</div>
+
+<!-- ===== SERVICES PAGE ===== -->
+<div class="page" id="page-services">
+  <div class="services-section">
+    <div class="service-card">
+      <h3>🌿 认领共享菜园</h3>
+      <p>同一社区5人成团，每人每年200元，认领专属一米菜园。由认地人阿甘可乐协助一起种地、做饭，并可共享其他地块的蔬菜。享受有机方式种植的大米、面粉、豆制品、杂粮、蔬菜等会员价。</p>
+      <div class="price-tag">¥200 /人/年</div>
+      <div class="price-note">五人成团 · 有机种植 · 共享丰收</div>
+    </div>
+
+    <div class="service-card">
+      <h3>🎁 认地人会员福利价</h3>
+      <p>精选有机产品，会员专享优惠：</p>
+      <table class="product-table">
+        <tr><th>产品</th><th>会员价</th><th>原价</th></tr>
+        <tr><td>糙米</td><td>¥9.5/斤</td><td>¥17/斤</td></tr>
+        <tr><td>现碾胚芽米</td><td>¥10/斤</td><td>¥18/斤</td></tr>
+        <tr><td>全麦面粉</td><td>¥7.5/斤</td><td>¥14/斤</td></tr>
+        <tr><td>全麦馒头</td><td>¥1.5/个</td><td>¥3/个</td></tr>
+        <tr><td>豆皮</td><td>¥6/斤</td><td>¥12/斤</td></tr>
+        <tr><td>豆翅</td><td>¥12/斤</td><td>¥22/斤</td></tr>
+        <tr><td>黄豆</td><td>¥7/斤</td><td>¥13/斤</td></tr>
+        <tr><td>芝麻油</td><td>¥25/瓶</td><td>¥42/瓶</td></tr>
+        <tr><td>菜籽油</td><td>¥28/瓶</td><td>¥45/瓶</td></tr>
+        <tr><td>酱油</td><td>¥15/瓶</td><td>¥28/瓶</td></tr>
+        <tr><td>醋</td><td>¥12/瓶</td><td>¥22/瓶</td></tr>
+        <tr><td>生姜</td><td>¥8/斤</td><td>¥15/斤</td></tr>
+        <tr><td>红枣</td><td>¥15/斤</td><td>¥28/斤</td></tr>
+        <tr><td>红糖</td><td>¥10/斤</td><td>¥18/斤</td></tr>
+        <tr><td>花生</td><td>¥8/斤</td><td>¥15/斤</td></tr>
+        <tr><td>木耳</td><td>¥35/斤</td><td>¥60/斤</td></tr>
+        <tr><td>海带</td><td>¥12/斤</td><td>¥22/斤</td></tr>
+        <tr><td>藕粉</td><td>¥20/斤</td><td>¥35/斤</td></tr>
+        <tr><td>肉桂粉</td><td>¥18/瓶</td><td>¥32/瓶</td></tr>
+        <tr><td>辣椒粉</td><td>¥15/瓶</td><td>¥26/瓶</td></tr>
+        <tr><td>五香粉</td><td>¥12/瓶</td><td>¥22/瓶</td></tr>
+        <tr><td>咖喱粉</td><td>¥18/瓶</td><td>¥32/瓶</td></tr>
+        <tr><td>茶籽粉</td><td>¥10/斤</td><td>¥18/斤</td></tr>
+      </table>
+    </div>
+
+    <div class="service-card">
+      <h3>📍 自提点（无人货架）</h3>
+      <div class="pickup-list">
+        <div class="pickup-item">
+          <strong>📍 朱家角古镇站</strong><br>
+          上海市青浦区朱家角古镇菜园基地<br>
+          营业时间：每日 8:00 - 18:00
+        </div>
+        <div class="pickup-item">
+          <strong>📍 璟云里社区站</strong><br>
+          璟云里小区无人货架（会员自助取菜）<br>
+          24小时可取
+        </div>
+      </div>
+      <p style="font-size: 12px; color: var(--text-light); margin-top: 10px; line-height: 1.6;">
+        共享流程：农场有机种植 → 会员从菜园带菜到社区 → 放置无人货架 → 其他会员扫码自提。还可一起做柴火豆腐、蒸老面馒头、烤法棍等。
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PROFILE PAGE ===== -->
+<div class="page" id="page-profile">
+  <div class="profile-header">
+    <h2>我的</h2>
+    <p>会员中心</p>
+    <div class="profile-tag">认地人会员</div>
+  </div>
+
+  <div class="menu-group-title">我的菜园</div>
+  <div class="menu-item" onclick="showToast('功能开发中')">
+    <span class="menu-icon">🌿</span>
+    <span class="menu-text">我的菜地</span>
+    <span class="menu-arrow">›</span>
+  </div>
+  <div class="menu-item" onclick="showToast('功能开发中')">
+    <span class="menu-icon">📦</span>
+    <span class="menu-text">我的订单</span>
+    <span class="menu-arrow">›</span>
+  </div>
+  <div class="menu-item" onclick="showToast('功能开发中')">
+    <span class="menu-icon">🎉</span>
+    <span class="menu-text">活动报名</span>
+    <span class="menu-arrow">›</span>
+  </div>
+
+  <div class="menu-group-title">品牌合作</div>
+  <div class="menu-item" onclick="showToast('功能开发中')">
+    <span class="menu-icon">🤝</span>
+    <span class="menu-text">认地人品牌合伙人报名</span>
+    <span class="menu-arrow">›</span>
+  </div>
+
+  <div class="service-card" style="margin-top: 20px; font-size: 12px; color: var(--text-light); line-height: 1.7;">
+    <strong>认地人品牌合伙人权益：</strong><br>
+    每年1000元，最少认领5块一米菜园，可使用“认地人”共有品牌（支持自有品牌+认地人双品牌），在岑卜村认地人共享菜园门口挂自有品牌，享受悦意渠道价格及德风商城产品会员价。会员费去掉成本后，如有剩余，由合伙人平分。
+  </div>
+</div>
+
+<!-- TAB BAR -->
+<div class="tab-bar">
+  <button class="tab-item active" onclick="switchPage('home', this)">
+    <span class="tab-icon">🏠</span>
+    <span class="tab-label">首页</span>
+  </button>
+  <button class="tab-item" onclick="switchPage('services', this)">
+    <span class="tab-icon">💳</span>
+    <span class="tab-label">会员服务</span>
+  </button>
+  <button class="tab-item" onclick="switchPage('profile', this)">
+    <span class="tab-icon">👤</span>
+    <span class="tab-label">我的</span>
+  </button>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast" style="
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  background: rgba(0,0,0,0.75);
+  color: white;
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-size: 14px;
+  z-index: 1000;
+  opacity: 0;
+  transition: all 0.3s;
+  pointer-events: none;
+  text-align: center;
+"></div>
+
+<script>
+function switchPage(page, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+</script>
+</body>
+</html>
